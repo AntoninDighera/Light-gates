@@ -56,42 +56,27 @@ void setup() {
     }
     
   display.display();
-  delay(2000); // Pause for 2 seconds
+  delay(2000);             // Pause for 2 seconds
   display.clearDisplay();  // Clear the buffer
 
 }
 
 void loop() {
-  digitalWrite(4,t1?HIGH:LOW);
+  digitalWrite(4,t1?HIGH:LOW);      
   if (t2>0)
     {
 //      Serial.println("*******************");
 //      Serial.println(t2-t1);
 //      Serial.println("Microseconds");
 //      Serial.println("*******************"); // uncomment this if you want to use the serial monitor as well as the OLED display 
-        display.clearDisplay();
+        display.clearDisplay();             // Clears display buffer
         display.setTextSize(2);             // Normal 1:1 pixel scale
         display.setTextColor(WHITE);        // Draw white text
         display.setCursor(0,0);             // Start at top-left corner
-        display.println(t2-t1);
-        display.println(F( "SECONDS"));
-        display.display();
-        //delay(2000);
-        t1=t2=0;
+        display.println(t2-t1);             // Prints time in microseconds (SAVE THIS FUNTIONALITY)
+        display.println(F( "SECONDS"));     // Prints the string
+        display.display();                  // Updates display buffer
+        //delay(2000);                      // I just left this here to take up space.
+        t1=t2=0;                            // Sets variables to 0
     }
 }
-
-/*
-This version may be safer inside an interrupt:
-static unsigned long myMicros() {
-   extern volatile unsigned long timer0_overflow_count;
-   uint8_t oldSREG = SREG;      
-   cli();      
-   uint32_t t = TCNT0;
-   if ((TIFR0 & _BV(TOV0)) && (t == 0))
-       t = 256;
-   uint32_t m = timer0_overflow_count;
-   SREG = oldSREG;
-   return ((m << 8) + t) * (64 / clockCyclesPerMicrosecond());
-}
-*/
