@@ -46,9 +46,10 @@ void setup() {
   pinMode(4,OUTPUT);
   attachInterrupt(digitalPinToInterrupt(2),sens1,RISING);
   attachInterrupt(digitalPinToInterrupt(3),sens2,RISING);
+  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   //Serial.begin(115200); //initializes serial connection at 57600 baud
   Serial.begin(57600); //initializes serial connection at 57600 baud
-  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
+  
   
     if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {   // Address 0x3C for 128x32
       Serial.println(F("SSD1306 allocation failed"));
@@ -58,6 +59,7 @@ void setup() {
   display.display();
   delay(2000);             // Pause for 2 seconds
   display.clearDisplay();  // Clear the buffer
+  sass();
 
 }
 
@@ -79,4 +81,16 @@ void loop() {
         //delay(2000);                      // I just left this here to take up space.
         t1=t2=0;                            // Sets variables to 0
     }
+}
+
+void sass(void){
+  
+  display.clearDisplay();
+  display.setTextSize(2);             // Normal 1:1 pixel scale
+  display.setTextColor(WHITE);        // Draw white text
+  display.setCursor(0,0);             // Start at top-left corner
+  display.println(F( "WAITING"));
+  display.println(F( "ON YOU..."));
+  display.display();
+
 }
