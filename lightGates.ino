@@ -44,10 +44,10 @@ void setup() {
   pinMode(2,INPUT);
   pinMode(3,INPUT);
   pinMode(4,OUTPUT);
-  attachInterrupt(0,sens1,RISING);
-  attachInterrupt(1,sens2,RISING);
-  //Serial.begin(115200);
-  Serial.begin(57600); //setup fot this, changing to comply with screen
+  attachInterrupt(digitalPinToInterrupt(2),sens1,RISING);
+  attachInterrupt(digitalPinToInterrupt(3),sens2,RISING);
+  //Serial.begin(115200); //initializes serial connection at 57600 baud
+  Serial.begin(57600); //initializes serial connection at 57600 baud
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   
     if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {   // Address 0x3C for 128x32
