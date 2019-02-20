@@ -10,7 +10,7 @@
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
 
 // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
-#define OLED_RESET     4 // Reset pin # (or -1 if sharing Arduino reset pin)
+#define OLED_RESET    -1 // Reset pin # (or -1 if sharing Arduino reset pin)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 
@@ -37,6 +37,10 @@ static const unsigned char PROGMEM logo_bmp[] =
 
 unsigned long t1=0;
 unsigned long t2=0;
+float x;
+float y;
+float z;
+
 void sens1() { if ((t1==0) && (t2==0)) t1=micros(); } 
 void sens2() { if ((t2==0) && (t1!=0)) t2=micros(); }
 
@@ -46,20 +50,20 @@ void setup() {
   pinMode(4,OUTPUT);
   attachInterrupt(digitalPinToInterrupt(2),sens1,RISING);
   attachInterrupt(digitalPinToInterrupt(3),sens2,RISING);
-  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
+  //SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   //Serial.begin(115200); //initializes serial connection at 57600 baud
   Serial.begin(57600); //initializes serial connection at 57600 baud
   
   
     if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {   // Address 0x3C for 128x32
       Serial.println(F("SSD1306 allocation failed"));
-      for(;;); // Don't proceed, loop forever
+      for(;;);                                        // Don't proceed, loop forever
     }
     
-  display.display();
+  display.display();       // Updates display buffer 
   delay(2000);             // Pause for 2 seconds
   display.clearDisplay();  // Clear the buffer
-  sass();
+  sass();                  // Initialize sass
 
 }
 
@@ -67,19 +71,27 @@ void loop() {
   digitalWrite(4,t1?HIGH:LOW);      
   if (t2>0)
     {
-//      Serial.println("*******************");
-//      Serial.println(t2-t1);
-//      Serial.println("Microseconds");
-//      Serial.println("*******************"); // uncomment this if you want to use the serial monitor as well as the OLED display 
-        display.clearDisplay();             // Clears display buffer
-        display.setTextSize(2);             // Normal 1:1 pixel scale
-        display.setTextColor(WHITE);        // Draw white text
-        display.setCursor(0,0);             // Start at top-left corner
-        display.println(t2-t1);             // Prints time in microseconds (SAVE THIS FUNTIONALITY)
-        display.println(F( "SECONDS"));     // Prints the string
-        display.display();                  // Updates display buffer
-        //delay(2000);                      // I just left this here to take up space.
-        t1=t2=0;                            // Sets variables to 0
+        x = t2-t1;                              // Assign x to the difference between the variables t1 and t2, result will be in microseconds
+        y = 1000000;                            // Assign y as 1,000,000
+        z = x / y;                              // converts time from microseconds to seconds
+        /*
+        Serial.println("*******************");
+        Serial.println(z,6);                    // Prints time in seconds with 6 decimal places
+        Serial.println("SECONDS");              // Prints the string
+        Serial.println("*******************");  // uncomment this if you want to use the serial monitor as well as the OLED display 
+        */ 
+        display.clearDisplay();                 // Clears display buffer
+        display.setTextSize(2);                 // Normal 1:1 pixel scale
+        display.setTextColor(WHITE);            // Draw white text
+        display.setCursor(0,0);                 // Start at top-left corner
+        display.println(z,6);                   // Prints time in seconds with 6 decimal places
+        display.println(F( "SECONDS"));         // Prints the string
+        display.display();                      // Updates display buffer
+        //delay(2000);                          // I just left this here to take up space.
+        x = 0;                                  // Sets variable to 0
+        y = 0;                                  // Sets variable to 0
+        z = 0;                                  // Sets variable to 0
+        t1=t2=0;                                // Sets variables to 0
     }
 }
 
