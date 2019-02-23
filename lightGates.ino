@@ -1,6 +1,8 @@
 // reads two IR proximity/line-detectors.  reports time between triggers.
 // uses interrupts.  First one should go high for detect on 2
 // second detector should go high on detect on pin 3
+// created by antonin.dighera@gmail.com 6/8/2018
+// Last revised 2/22/2019
 
 #include <SPI.h>
 #include <Wire.h>
